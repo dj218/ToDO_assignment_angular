@@ -1,0 +1,5 @@
+#email.ng-touched.ng-invalid,
+#password.ng-touched.ng-invalid,
+#confirmPassword.ng-touched.ng-invalid{
+  border-color: red;
+}

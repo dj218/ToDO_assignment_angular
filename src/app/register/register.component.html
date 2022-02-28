@@ -1,0 +1,122 @@
+<div class="row card m-3">
+    <div class="col-md">
+        <form style=" width: 90vw; margin-left : 10vw;" [formGroup]="RegisterForm" (ngSubmit)="onSubmit()"> 
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <h2>Register</h2>
+                    <p>Please fill in this form to create an account.</p>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" id="email" class="form-control" formControlName="email" placeholder="Enter your email">
+                    </div>
+                    <div class="text-danger">
+                        <div *ngIf="RegisterForm.get('email')?.hasError('required') && RegisterForm.get('email')?.touched">Email is required</div>
+                        <div *ngIf="RegisterForm.get('email')?.hasError('pattern') || (RegisterForm.get('email')?.invalid && RegisterForm.get('email')?.dirty)">Email must be a valid email address</div>
+                        <div *ngIf="emailAlredyExist != ''" class="alert alert-danger">{{emailAlredyExist}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="form-control" formControlName="firstName" placeholder="Enter your first name">
+                        <div class="text-danger">
+                            <div *ngIf="RegisterForm.get('firstName')?.hasError('required') && RegisterForm.get('firstName')?.touched">First Name is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="form-control" formControlName="lastName" placeholder="Enter your last name">
+                        <div class="text-danger">
+                            <div *ngIf="RegisterForm.get('lastName')?.hasError('required') && RegisterForm.get('lastName')?.touched">Last Name is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select name="gender" id="gender" class="form-control" formControlName="gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="text-danger">
+                            <div *ngIf="RegisterForm.get('gender')?.hasError('required') && RegisterForm.get('gender')?.touched">Gender is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea type="text" id="address" rows="2" class="form-control" formControlName="address"></textarea>
+                    </div>
+                    <div class="text-danger">
+                        <div *ngIf="RegisterForm.get('address')?.hasError('required') && RegisterForm.get('address')?.touched">Address is required</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <label>Profile Image</label>
+                    <input type="file" id="profileImage" class="form-control" name="profileImage" formControlName="profileImage" (change)="onaddImage($event)">
+                    <!-- <img [src]="profileImage" class="img-responsive" *ngIf="profileImage !=''" style="height: 200px;"> -->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter your password">
+                        <div class="text-danger">
+                            <div *ngIf="RegisterForm.get('password')?.hasError('required') && RegisterForm.get('password')?.touched">Password is required</div>
+                            <div *ngIf="RegisterForm.get('password')?.hasError('minlength')">Password must be at least 8 characters</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <div class="form-group">
+                        <label for="confirmPassword">Repeat Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" formControlName="confirmPassword" placeholder="Enter your confirmPassword">
+                        <div class="text-danger">
+                            <div *ngIf="RegisterForm.get('confirmPassword')?.hasError('required') && RegisterForm.get('confirmPassword')?.touched">Confirm Password is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs col-md-6 col-md-offset-3">
+                    <div class="form-group">
+                        <button class="btn btn-primary mr-1" type="submit" [disabled]="RegisterForm.invalid">Register</button>
+                        <button class="btn btn-secondary" type="button" (click)="gotoLoginForm()">Already have an account | Login</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
