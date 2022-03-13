@@ -8,18 +8,18 @@
       <div class="col-xs-6" style="text-align:center">
         <h2>{{heading}}</h2>
       </div>
-      <app-todolist-item *ngFor="let ts of tasks" [task]="ts" [deleteMode]="deleteMode"></app-todolist-item>
+      <app-todolist-item *ngFor="let ts of todolist" [item]="ts" [deleteMode]="deleteMode"></app-todolist-item>
 
       <div class="col-xs-6">
-        <button class="btn btn-primary pull-right" style="margin-top: 6%;" (click)="selectTaskToDeleteButtonClicked()"
+        <button class="btn btn-primary pull-right" style="margin-top: 6%;" (click)="SelectTaskToDeleteButtonClicked()"
           *ngIf="!deleteMode">Select tasks to delete</button>
 
         <div *ngIf="deleteMode" class="btn-group pull-right" style="margin-top: 6%;">
-          <button class="btn btn-danger" (click)="onDelete()">Delete</button>
-          <button class="btn btn-primary" (click)="onCancel()">Cancel</button>
+          <button class="btn btn-danger" (click)="OnDelete()">Delete</button>
+          <button class="btn btn-primary" (click)="OnCancel()">Cancel</button>
         </div>
       </div>
     </div>
-    <p *ngIf="tasks.length ==0 " style="text-align: center;">No tasks available</p>
+    <p *ngIf="todolist.length ==0 " style="text-align: center;">No tasks available</p>
   </div>
 </div>

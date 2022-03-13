@@ -11,8 +11,6 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-
-  submitted = false;
   emailAlredyExist ="";
   profileImage: string = '';
   RegisterForm: FormGroup;
@@ -26,7 +24,6 @@ export class RegisterComponent implements OnInit {
       address: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
-      profileImage : ['',[]],
       profileImageSrc : ['',[]]
     },
     {
@@ -34,13 +31,8 @@ export class RegisterComponent implements OnInit {
     })
   }
 
-
-
   ngOnInit(): void {
   }
-
-  // // convenience getter for easy access to form fields
-  // get f() { return this.RegisterForm.controls; }
 
   gotoLoginForm() {
     this.router.navigate(['/login']);
@@ -64,22 +56,22 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submitted = true;
-
     // stop here if form is invalid
     if (this.RegisterForm.invalid) {
       return;
     }
 
-    if(this.userservice.UniqueEmail(this.RegisterForm.value['email'])){
-      let user=<User>this.RegisterForm.value;
-      this.userservice.adduser(user);
-      console.log(this.RegisterForm);
-      this.router.navigate(['/profile']);
-    }
-    else{
-      //Email already exists.
+    // from user service it will check if Email is unique or not if unique it will create a user(which will be of the form
+    // USER model) and will add this user in local storage and will navigate to the login page 
+    if(this.userservice.EmailIsUnique(this.RegisterForm.value['email'])){
       this.emailAlredyExist="Email Already Exist";
+    }
+    // else will set the variable email already exist to this message
+    else{
+      let user=this.RegisterForm.value;
+      delete user.confirmPassword;
+      this.userservice.AddUser(user);
+      this.router.navigate(['/login']);
     }
   }
 }

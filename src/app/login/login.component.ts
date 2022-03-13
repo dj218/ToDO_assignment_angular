@@ -31,10 +31,12 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    // stop here if form is invalid
     if (this.LoginForm.invalid)
       return;
 
-    if (this.userservice.uservalidation(this.LoginForm.value['email'], this.LoginForm.value['password'])) {
+    // from user service it will check if user exists in the local storage or not and will navigate to the login page 
+    if (this.userservice.UserExists(this.LoginForm.value['email'], this.LoginForm.value['password'])) {
       this.wrongInput = false;
       this.router.navigate(['/profile'],{queryParams:{'userEmail':this.userservice.activteUserEmail}});
     }

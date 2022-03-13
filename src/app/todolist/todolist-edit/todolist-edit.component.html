@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-between align-items-center mb-3">
-      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="taskForm" (ngSubmit)="OnSubmit()">
   
         <div class="row">
           <div class="col-xs-12">
@@ -46,8 +46,8 @@
                 <input
                 type="checkbox"
                 [value]="tcat.value"
-                (change)="onCheckboxChange($event,'categories')"
-                [checked]="task != null && task.categories.includes(tcat.value)"
+                (change)="OnCheckboxChange($event,'categories')"
+                [checked]="item != null && item.categories.includes(tcat.value)"
                 />
                 {{tcat.name}}
               </div>
@@ -58,7 +58,7 @@
   
         <div class="row">
           <div class="col-xs-12">
-            <input type="checkbox" (change)="onAddReminder()" [checked] = "task!=null && task.reminderDate!=null"> Add a reminder
+            <input type="checkbox" (change)="OnAddReminder()" [checked] = "item!=null && item.reminderDate!=null"> Add a reminder
             <input
               type="date"
               class="form-control"
@@ -70,15 +70,14 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
-              <label for="taskImage">Task Image</label>
+              <label for="itemImage">Task Image</label>
               <input
                 type="file"
-                id="taskImage"
-                name="taskImage"
+                id="itemImage"
+                name="itemImage"
                 class="form-control"
-                (change)="onImageChange($event)"
-                formControlName="taskImage"><br>
-              <img [src]="taskImageDisplay" class="img-responsive" *ngIf="taskImageDisplay != ''" style="height: 200px;">
+                (change)="OnImageChange($event)">
+              <img [src]="ItemImageDisplay" class="img-responsive" *ngIf="ItemImageDisplay != ''" style="height: 200px;">
             </div>
           </div>
         </div>
@@ -96,7 +95,7 @@
         <div class="row">
           <div class="col-xs-12">
             <button class="btn btn-success" type="submit" [disabled]="taskForm.invalid">Save</button> |
-            <button class="btn btn-danger" type="button" (click)="onCancel()">Cancel</button>
+            <button class="btn btn-danger" type="button" (click)="OnCancel()">Cancel</button>
           </div>
         </div>
   

@@ -5,7 +5,7 @@
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <img [src]="profileImageSrc" class="rounded-circle mt-5 img-responsive" width="150px" *ngIf="profileImageSrc != ''">
                     <label for="profileImage">Profile Image</label>
-                    <input type="file" id="profileImage" name="profileImage" class="form-control" formControlName="profileImage" (change)="onImageChange($event)">
+                    <input type="file" id="profileImage" name="profileImage" class="form-control" (change)="onImageChange($event)">
                 </div>
             </div>
             <div class="col-md-5 border-right">

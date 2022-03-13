@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { mustMatch } from 'src/app/helpers/CustomValidators';
+import { Router } from '@angular/router';
 import { Filter } from 'src/app/models/filter.model';
 import { TodolistService } from 'src/app/services/todolist.service';
 import { UserService } from 'src/app/services/user.service';
@@ -32,9 +31,8 @@ export class TodolistHeaderComponent implements OnInit {
   constructor(
       private fb: FormBuilder,
       private router : Router ,
-      private route : ActivatedRoute ,
       private userService : UserService,
-      private taskService : TodolistService) {
+      private todolistService : TodolistService) {
 
     this.taskFilterForm = this.fb.group({
       taskTypeArray: this.fb.array(this.taskType.map(el => new FormControl(false))),
@@ -42,37 +40,32 @@ export class TodolistHeaderComponent implements OnInit {
       startDate : ['',[]],
       endDate : ['',[]],
       sortTasks : ['',[]]
-    },
-    {
-      validator: mustMatch("startDate","endDate")
     })
-
     this.initialTaskFilterFormValue = this.taskFilterForm.value;
-
   }
 
   ngOnInit(): void {
   }
 
-  onClickCreateTask(){
+  OnClickCreateTask(){
     this.router.navigate(['/todolist/create'])
   }
 
-  onClickReset(){
+  OnClickReset(){
 
-    this.taskService.filters = new Filter(this.userService.activteUserEmail,[],'','',[],'');
-    this.taskService.getTasks();
-    this.resetForm();
+    this.todolistService.filters = new Filter(this.userService.activteUserEmail,[],'','',[],'');
+    this.todolistService.GetTasks();
+    this.ResetForm();
   }
 
-  resetForm(){
+  ResetForm(){
     (<FormArray>this.taskFilterForm.controls['taskTypeArray']).reset();
     (<FormArray>this.taskFilterForm.controls['taskCategoryArray']).reset();
     this.taskFilterForm.reset(this.initialTaskFilterFormValue);
   }
 
 
-  onSubmit() {
+  OnSubmit() {
     let userEmail = this.userService.activteUserEmail;
     let taskTypeArray = [];
     let startDate = this.taskFilterForm.get('startDate').value;
@@ -94,8 +87,8 @@ export class TodolistHeaderComponent implements OnInit {
       j++;
     });
 
-    this.taskService.filters = new Filter(userEmail,taskTypeArray,startDate,endDate,taskCategoryArray,sortType);
-    this.taskService.getTasks();
+    this.todolistService.filters = new Filter(userEmail,taskTypeArray,startDate,endDate,taskCategoryArray,sortType);
+    this.todolistService.GetTasks();
   }
 
 }

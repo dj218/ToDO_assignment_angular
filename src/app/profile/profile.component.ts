@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit {
   profileImageSrc: string = '';
 
   constructor(private userservice: UserService,private formbuilder:FormBuilder) {
-    let user: User = userservice.getuser(userservice.activteUserEmail);
+    let user: User = userservice.GetUser(userservice.activteUserEmail);
 
     this.profileform = this.formbuilder.group({
       email: [user.email,[Validators.required,Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"),Validators.email]],
@@ -23,7 +23,6 @@ export class ProfileComponent implements OnInit {
       lastName: [user.lastName,[Validators.required]],
       gender :[user.gender,[Validators.required]],
       address : [user.address,[Validators.required]],
-      profileImage : ['',[]],
       profileImageSrc : [user.profileImageSrc,[]],
       password: [user.password,[Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
       confirmPassword: [user.password,[Validators.required, Validators.minLength(8), Validators.maxLength(12)]]
@@ -55,11 +54,7 @@ export class ProfileComponent implements OnInit {
       }
 
   onSubmit(){
-      let profileData=this.profileform.value;
-      console.log(profileData);
-      this.userservice.edituser(this.userservice.activteUserEmail,profileData);  
-      let user: User = this.userservice.getuser(this.userservice.activteUserEmail);
-      console.log(user);
+      this.userservice.EditUser(this.userservice.activteUserEmail,this.profileform.value);  
       }
 
 }

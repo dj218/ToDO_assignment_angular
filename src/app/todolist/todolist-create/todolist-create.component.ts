@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TodolistService } from 'src/app/services/todolist.service';
-import { Task } from 'src/app/models/task.model';
+import { Item } from 'src/app/models/item.model';
 
 
 @Component({
@@ -12,62 +12,69 @@ import { Task } from 'src/app/models/task.model';
 })
 export class TodolistCreateComponent implements OnInit {
 
-  reminderFieldIsVisible : boolean = false;
-  taskImageDisplay : string = '';
-  task : Task;
+  item: Item;
+  reminderFieldIsVisible: boolean = false;
+  ItemImageDisplay: string = '';
 
-  taskCreateForm : FormGroup ;
+  taskCreateForm: FormGroup;
 
-  taskCategory: Array<any> = [
-    { name: 'Important', value: 'important' },
-    { name: 'Work', value: 'work' },
-    { name: 'Extracurricular', value: 'extracurricular' },
-    { name: 'Sports', value: 'sports' }
+  itemCategory: Array<any> = [
+    { name: 'Important', value: 'important', checked: false },
+    { name: 'Work', value: 'work', checked: false },
+    { name: 'Extracurricular', value: 'extracurricular', checked: false },
+    { name: 'Sports', value: 'sports', checked: false }
   ]
 
   constructor(
-      private formBuilder : FormBuilder,
-      private taskService : TodolistService,
-      private router : Router
-      ) {
+    private formBuilder: FormBuilder,
+    private todolistService: TodolistService,
+    private router: Router
+  ) {
 
     this.taskCreateForm = this.formBuilder.group({
-      title : ['',[Validators.required]],
-      dueDate : ['',[Validators.required]],
+      title: ['', [Validators.required]],
+      dueDate: ['', [Validators.required]],
+      //we are using FormArray because we want to dynamically generate form controls such as <input>
       categories: this.formBuilder.array([], [Validators.required]),
-      reminderDate : ['',[]],
-      taskImage : ['',[]],
-      taskImageSrc : ['',[]],
-      markAsDone : ['',[]]
+      reminderDate: ['', []],
+      taskImageSrc: ['', []],
+      markAsDone: ['', []]
     });
   }
 
   ngOnInit(): void {
   }
 
-  onCancel(){
+  OnCancel() {
     this.router.navigate(['/todolist']);
   }
 
-  onSubmit(){
-    this.taskService.addTask(this.taskCreateForm.value);
+  OnSubmit() {
+    console.log(this.taskCreateForm.value);
+    this.todolistService.AddTask(this.taskCreateForm.value);
     this.router.navigate(['/todolist']);
   }
 
-  onAddReminder(){
+  OnAddReminder() {
     this.reminderFieldIsVisible = !this.reminderFieldIsVisible;
     this.taskCreateForm.get('reminderDate').reset();
   }
 
-  onCheckboxChange(e: any,arrayType : string) {
-    const checkArray: FormArray = this.taskCreateForm.get(arrayType) as FormArray;
-    if (e.target.checked) {
-      checkArray.push(new FormControl(e.target.value));
-    } else {
-      let i: number = 0;
-      checkArray.controls.forEach((item) => {
-        if (item.value == e.target.value) {
-          checkArray.removeAt(i);
+  
+  OnCheckboxChange(e:any,categories:string) {
+    const ArrayOfCheckedCategories = <FormArray>this.taskCreateForm.get(categories);
+    if(e.target.checked)
+    {
+      // Now to add a form control at run time we need to use push() method of FormArray
+      ArrayOfCheckedCategories.push(new FormControl(e.target.value));
+    }
+    else{
+      // To remove a form control at run time we need to use removeAt() method of FormArray.
+        let i=0;
+        ArrayOfCheckedCategories.controls.forEach((item) =>{
+        if(item.value==e.target.value)
+        {
+          ArrayOfCheckedCategories.removeAt(i);
           return;
         }
         i++;
@@ -75,15 +82,15 @@ export class TodolistCreateComponent implements OnInit {
     }
   }
 
-  onImageChange(e:any) {
+  OnImageChange(e: any) {
     const reader = new FileReader();
 
-    if(e.target.files && e.target.files.length) {
+    if (e.target.files && e.target.files.length) {
       const [file] = e.target.files;
       reader.readAsDataURL(file);
 
       reader.onload = () => {
-        this.taskImageDisplay = reader.result as string;
+        this.ItemImageDisplay = reader.result as string;
         this.taskCreateForm.patchValue({
           taskImageSrc: reader.result
         });
@@ -91,6 +98,7 @@ export class TodolistCreateComponent implements OnInit {
       };
     }
   }
+
 
 
 }

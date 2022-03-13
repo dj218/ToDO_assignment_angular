@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TodolistService } from 'src/app/services/todolist.service';
-import { Task } from 'src/app/models/task.model';
+import { Item } from 'src/app/models/item.model';
 
 @Component({
   selector: 'app-todolist-item',
@@ -10,31 +10,32 @@ import { Task } from 'src/app/models/task.model';
 export class TodolistItemComponent implements OnInit {
 
  
-  @Input() task : Task;
+  @Input() item : Item;
   @Input() deleteMode : boolean = false;
 
   subHeading : string;
 
-  constructor(private taskService : TodolistService) { }
+  constructor(private todolistService : TodolistService) { }
 
   ngOnInit(): void {
 
-    if(this.task.markAsDone)
+    if(this.item.markAsDone)
       this.subHeading = '(Completed)'
 
   }
 
   onChangeCheckbox(e : any){
+    // if checkbox is checked we have to add this item to the delete array
     if(e.target.checked)
-      this.taskService.checkTaskToDelete(this.task.taskId);
+    this.todolistService.CheckTaskToDelete(this.item.itemId);
+    // else if checkbox is unchecked we have to remove this item from the delete array by filtering it
     else if(!e.target.checked)
-      this.taskService.uncheckTaskToDelete(this.task.taskId);
+      this.todolistService.UncheckTaskToDelete(this.item.itemId);
   }
 
   markAsDone(){
-    this.task.markAsDone = true;
+    this.item.markAsDone = true;
     this.subHeading = '(Completed)';
-
-    this.taskService.updateTask(this.task.taskId,this.task);
+    this.todolistService.UpdateTask(this.item.itemId,this.item);
   }
 }

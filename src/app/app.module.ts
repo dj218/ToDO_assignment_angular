@@ -9,6 +9,7 @@ import { TodolistComponent } from './todolist/todolist.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { TodolistEditComponent } from './todolist/todolist-edit/todolist-edit.component';
 import { TodolistItemComponent } from './todolist/todolist-item/todolist-item.component';
 import { TodolistHeaderComponent } from './todolist/todolist-header/todolist-header.component';
@@ -30,7 +31,8 @@ import { TodolistCreateComponent } from './todolist/todolist-create/todolist-cre
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

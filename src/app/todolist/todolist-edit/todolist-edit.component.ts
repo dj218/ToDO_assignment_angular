@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Task } from 'src/app/models/task.model';
+import { Item } from 'src/app/models/item.model';
 import { TodolistService } from 'src/app/services/todolist.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-todolist-edit',
@@ -12,11 +11,11 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class TodolistEditComponent implements OnInit {
 
-  taskId : string ='';
-  task : Task;
+  itemId : string ='';
+  item : Item;
 
   reminderFieldIsVisible : boolean = false;
-  taskImageDisplay : string = '';
+  ItemImageDisplay : string = '';
 
 
   taskForm : FormGroup ;
@@ -29,33 +28,33 @@ export class TodolistEditComponent implements OnInit {
 
   constructor(
       private formBuilder : FormBuilder,
-      private taskService : TodolistService,
-      private userService : UserService,
+      private todolistService : TodolistService,
       private router : Router,
       private route : ActivatedRoute) {
 
     this.route.queryParams.subscribe((params)=>{
-      this.taskId = params['taskId'];
+      this.itemId = params['itemId'];
     });
 
-    this.task = taskService.getTaskByTaskId(this.taskId);
+    this.item = todolistService.GetTaskByTaskId(this.itemId);
 
     this.taskForm = this.formBuilder.group({
-      title : [this.task.title,[Validators.required]],
-      dueDate : [this.task.dueDate,[Validators.required]],
+      title : [this.item.title,[Validators.required]],
+      dueDate : [this.item.dueDate,[Validators.required]],
       categories: this.formBuilder.array([], [Validators.required]),
-      reminderDate : [this.task.reminderDate,[]],
-      taskImage : ['',[]],
-      taskImageSrc : [this.task.taskImageSrc,[]],
-      markAsDone : [this.task.markAsDone,[]]
+      reminderDate : [this.item.reminderDate,[]],
+      itemImageSrc : [this.item.itemImageSrc,[]],
+      markAsDone : [this.item.markAsDone,[]]
     });
 
+      // here as we are editing an Item so firstly we will have to load this item correctly by checking if there 
+      // is a reminder , image to be displayed , which categories are selected  
       if(this.taskForm.controls['reminderDate'].value != null)
         this.reminderFieldIsVisible = true;
-      if(this.taskForm.controls['taskImageSrc'].value != null)
-        this.taskImageDisplay = this.taskForm.controls['taskImageSrc'].value;
-      if(this.task.categories != null){
-        for(let categoryEl of this.task.categories){
+      if(this.taskForm.controls['itemImageSrc'].value != null)
+        this.ItemImageDisplay = this.taskForm.controls['itemImageSrc'].value;
+      if(this.item.categories != null){
+        for(let categoryEl of this.item.categories){
           (<FormArray>this.taskForm.get('categories')).push(new FormControl(categoryEl));
         }
       }
@@ -64,29 +63,29 @@ export class TodolistEditComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onCancel(){
+  OnCancel(){
     this.router.navigate(['/todolist']);
   }
 
-  onSubmit(){
-    this.taskService.updateTask(this.taskId,this.taskForm.value);
+  OnSubmit(){
+    this.todolistService.UpdateTask(this.itemId,this.taskForm.value);
     this.router.navigate(['/todolist']);
   }
 
-  onAddReminder(){
+  OnAddReminder(){
     this.reminderFieldIsVisible = !this.reminderFieldIsVisible;
     this.taskForm.get('reminderDate').reset();
   }
 
-  onCheckboxChange(e: any,arrayType : string) {
-    const checkArray: FormArray = this.taskForm.get(arrayType) as FormArray;
+  OnCheckboxChange(e: any,categories : string) {
+    const ArrayOfCheckedCategories= <FormArray>this.taskForm.get(categories);
     if (e.target.checked) {
-      checkArray.push(new FormControl(e.target.value));
+      ArrayOfCheckedCategories.push(new FormControl(e.target.value));
     } else {
       let i: number = 0;
-      checkArray.controls.forEach((item) => {
+      ArrayOfCheckedCategories.controls.forEach((item) => {
         if (item.value == e.target.value) {
-          checkArray.removeAt(i);
+          ArrayOfCheckedCategories.removeAt(i);
           return;
         }
         i++;
@@ -94,7 +93,7 @@ export class TodolistEditComponent implements OnInit {
     }
   }
 
-  onImageChange(e:any) {
+  OnImageChange(e:any) {
     const reader = new FileReader();
 
     if(e.target.files && e.target.files.length) {
@@ -102,14 +101,12 @@ export class TodolistEditComponent implements OnInit {
       reader.readAsDataURL(file);
 
       reader.onload = () => {
-        this.taskImageDisplay = reader.result as string;
+        this.ItemImageDisplay = reader.result as string;
         this.taskForm.patchValue({
-          taskImageSrc: reader.result
+          itemImageSrc: reader.result
         });
 
       };
     }
   }
-
-
 }

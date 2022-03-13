@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
 export class UserService implements OnInit{
 
   constructor() {
-      this.getdatafromlocalstorage()
+      this.GetDataFromLocalStorage()
    }
   ngOnInit(): void {  
   }
@@ -17,76 +17,54 @@ export class UserService implements OnInit{
   public activteUserEmail: string = '';
   public AuthenticationStatusChanged = new EventEmitter<string> ();
   
-  getdatafromlocalstorage()
+  GetDataFromLocalStorage()
   {
-    this.userarray = JSON.parse(localStorage.getItem('usersarray'));
+    this.userarray = JSON.parse(localStorage.getItem('usersarray')) || [];
   }
 
-  userlogout() {
+  UserLogout() {
     this.activteUserEmail = '';
     this.AuthenticationStatusChanged.emit(this.activteUserEmail);
   }
 
 
-  adduser(user: User) {
+  AddUser(user: User) {
     this.userarray.push(user);
-    console.log(user);
     localStorage.setItem('usersarray', JSON.stringify(this.userarray));
     this.activteUserEmail = user.email;
     this.AuthenticationStatusChanged.emit(user.email);
   }
 
-  getuser(email:string):User
+  GetUser(email:string):User
   {
-    let i=0;
-    for(let user of this.userarray)
-    {
-      if(user.email==email)
-        break;
-      i++;
-    }
+    let i=this.userarray.map(function(e) {return e.email; }).indexOf(email);
     return this.userarray[i];
   }
   
-  edituser(userEmail: string,user: any) {
-    let i = 0;
-    for (let user of this.userarray) {
-      if (user.email == userEmail)
-        break;
-      i++;
-    }
+  EditUser(userEmail: string,user: any) {
+    let i=this.userarray.map(function(e) {return e.email; }).indexOf(userEmail);
     this.userarray[i].firstName = user.firstName;
     this.userarray[i].lastName = user.lastName;
     this.userarray[i].gender = user.gender;
     this.userarray[i].address = user.address;
-    this.userarray[i].profileImage = user.profileImage;
     this.userarray[i].profileImageSrc = user.profileImageSrc;
     localStorage.setItem('usersarray', JSON.stringify(this.userarray));
   }
 
-  UniqueEmail(email: string) 
+  EmailIsUnique(email: string) 
   {
-    for (let user of this.userarray) 
-    {
-      if (email == user.email) 
-      {
-        return false;
-      }
-    }
-    return true;
+    return this.userarray.map(function(e) {return e.email;}).includes(email);
   }
 
-  uservalidation(email: string, password: string)
+  UserExists(email: string, password: string)
   {
-    for (let user of this.userarray)
+    let i=this.userarray.map(function(e) {return e.email; }).indexOf(email);
+    if(this.userarray[i].email===email && this.userarray[i].password==password)
     {
-      if (user.email == email && user.password == password) 
-      {
-        this.activteUserEmail = email;
-        this.AuthenticationStatusChanged.emit(user.email);
-        return true;
-      }
+      this.activteUserEmail = email;
+      this.AuthenticationStatusChanged.emit(this.userarray[i].email);
+      return true;
     }
-    return false;
+    else return false;
   }
 }

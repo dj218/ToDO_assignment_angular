@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TodolistService } from '../services/todolist.service';
 import { UserService } from '../services/user.service';
-import { Task } from '../models/task.model';
+import { Item } from '../models/item.model';
 import { Filter } from '../models/filter.model';
 
 @Component({
@@ -11,33 +11,32 @@ import { Filter } from '../models/filter.model';
 })
 export class TodolistComponent implements OnInit {
 
-  tasks : Task[] = [];
+  todolist : Item[] = [];
   userEmail : string = '';
   deleteMode : boolean = false;
   filters : Filter ;
   heading : string ;
 
-  constructor(private taskService : TodolistService,private userService : UserService) { }
+  constructor(private todolistService : TodolistService,private userService : UserService) {
+    this.userEmail = this.userService.activteUserEmail;
+    this.todolistService.filters = new Filter(this.userEmail,[],'','',[],'');
+    this.filters = this.todolistService.filters;
+   }
 
   ngOnInit(): void {
 
-    this.userEmail = this.userService.activteUserEmail;
+    this.todolist = this.todolistService.GetTasks()
 
-    this.taskService.filters = new Filter(this.userEmail,[],'','',[],'');
-    this.filters = this.taskService.filters;
+    this.todolistService.tasksFilterApplied.subscribe((filteredTasks)=>{
+      this.todolist = filteredTasks;
+      this.filters = this.todolistService.filters;
 
-    this.tasks = this.taskService.getTasks()
-
-    this.taskService.tasksFilterApplied.subscribe((filteredTasks)=>{
-      this.tasks = filteredTasks;
-      this.filters = this.taskService.filters;
-
-      this.setheading();
+      this.SetHeading();
     })
-    this.setheading();
+    this.SetHeading();
   }
 
-  setheading(){
+  SetHeading(){
     if(
       this.filters.endDate == '' &&
       this.filters.sortType == '' &&
@@ -50,13 +49,13 @@ export class TodolistComponent implements OnInit {
       this.heading = 'Filtered Tasks';
   }
 
-  selectTaskToDeleteButtonClicked(){
-    this.taskService.tasksToDelete = [];
+  SelectTaskToDeleteButtonClicked(){
+    this.todolistService.tasksToDelete = [];
     this.deleteMode = true;
   }
 
-  onDelete(){
-    if(this.taskService.tasksToDelete.length == 0){
+  OnDelete(){
+    if(this.todolistService.tasksToDelete.length == 0){
       let text = "You haven't selected any tasks to delete";
       if(confirm(text) == true){}
     }
@@ -64,16 +63,14 @@ export class TodolistComponent implements OnInit {
       let text="Are you sure , you want to delete the selected tasks?";
 
       if(confirm(text) == true){
-        this.taskService.deleteTasks();
+        this.todolistService.DeleteTasks();
       }
     }
-    this.onCancel();
+    this.OnCancel();
   }
 
-  onCancel(){
+  OnCancel(){
     this.deleteMode = false;
-    this.taskService.tasksToDelete = [];
+    this.todolistService.tasksToDelete = [];
   }
-
-
 }

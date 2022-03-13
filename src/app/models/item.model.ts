@@ -1,12 +1,11 @@
-export class Task {
+export class Item {
     constructor(
-        public taskId : string,
+        public itemId : string,
         public userEmail : string,
         public title : string ,
         public dueDate : string,
         public categories : string[],
         public reminderDate : string,
-        public taskImage : string,
-        public taskImageSrc : string,
+        public itemImageSrc : string,
         public markAsDone : boolean){}
 }
