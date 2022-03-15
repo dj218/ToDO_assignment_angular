@@ -7,9 +7,10 @@ import { User } from '../models/user.model';
 export class UserService implements OnInit{
 
   constructor() {
-      this.GetDataFromLocalStorage()
+    this.GetDataFromLocalStorage() 
    }
-  ngOnInit(): void {  
+  ngOnInit(): void { 
+    
   }
 
   

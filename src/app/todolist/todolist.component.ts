@@ -3,6 +3,7 @@ import { TodolistService } from '../services/todolist.service';
 import { UserService } from '../services/user.service';
 import { Item } from '../models/item.model';
 import { Filter } from '../models/filter.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-todolist',
@@ -17,18 +18,18 @@ export class TodolistComponent implements OnInit {
   filters : Filter ;
   heading : string ;
 
-  constructor(private todolistService : TodolistService,private userService : UserService) {
-    this.userEmail = this.userService.activteUserEmail;
-    this.todolistService.filters = new Filter(this.userEmail,[],'','',[],'');
-    this.filters = this.todolistService.filters;
+  constructor(private router: Router,private todolistService : TodolistService,private userService : UserService) {
    }
 
   ngOnInit(): void {
 
-    this.todolist = this.todolistService.GetTasks()
+    this.userEmail = this.userService.activteUserEmail;
+    this.todolistService.filters = new Filter(this.userEmail,[],'','',[],'');
+    this.filters = this.todolistService.filters;
+    this.todolist = this.todolistService.GetItems()
 
-    this.todolistService.tasksFilterApplied.subscribe((filteredTasks)=>{
-      this.todolist = filteredTasks;
+    this.todolistService.itemsFilterApplied.subscribe((filteredItems)=>{
+      this.todolist = filteredItems;
       this.filters = this.todolistService.filters;
 
       this.SetHeading();
@@ -41,29 +42,30 @@ export class TodolistComponent implements OnInit {
       this.filters.endDate == '' &&
       this.filters.sortType == '' &&
       this.filters.startDate == '' &&
-      this.filters.taskCategoryArray.length ==0 &&
-      this.filters.taskTypeArray.length == 0)
-    this.heading = 'All Tasks';
+      this.filters.itemCategoryArray.length ==0 &&
+      this.filters.itemTypeArray.length == 0)
+    this.heading = 'All Items';
 
     else
-      this.heading = 'Filtered Tasks';
+      this.heading = 'Filtered Items';
   }
 
-  SelectTaskToDeleteButtonClicked(){
-    this.todolistService.tasksToDelete = [];
+  OnClickCreateItem(){
+    this.router.navigate(['/todolist/create'])
+  }
+
+  SelectItemsToDeleteButtonClicked(){
+    this.todolistService.itemsToDelete = [];
     this.deleteMode = true;
   }
 
   OnDelete(){
-    if(this.todolistService.tasksToDelete.length == 0){
-      let text = "You haven't selected any tasks to delete";
-      if(confirm(text) == true){}
+    if(this.todolistService.itemsToDelete.length == 0){
+      alert("You haven't selected any Items to delete");
     }
     else{
-      let text="Are you sure , you want to delete the selected tasks?";
-
-      if(confirm(text) == true){
-        this.todolistService.DeleteTasks();
+      if(confirm("Are you sure , you want to delete the selected Items?")){
+        this.todolistService.DeleteItems();
       }
     }
     this.OnCancel();
@@ -71,6 +73,6 @@ export class TodolistComponent implements OnInit {
 
   OnCancel(){
     this.deleteMode = false;
-    this.todolistService.tasksToDelete = [];
+    this.todolistService.itemsToDelete = [];
   }
 }

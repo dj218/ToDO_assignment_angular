@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { TodolistService } from 'src/app/services/todolist.service';
 import { Item } from 'src/app/models/item.model';
+import { validateDueDate } from 'src/app/helpers/CustomValidators';
 
 
 @Component({
@@ -15,8 +16,7 @@ export class TodolistCreateComponent implements OnInit {
   item: Item;
   reminderFieldIsVisible: boolean = false;
   ItemImageDisplay: string = '';
-
-  taskCreateForm: FormGroup;
+  itemCreateForm: FormGroup;
 
   itemCategory: Array<any> = [
     { name: 'Important', value: 'important', checked: false },
@@ -31,14 +31,16 @@ export class TodolistCreateComponent implements OnInit {
     private router: Router
   ) {
 
-    this.taskCreateForm = this.formBuilder.group({
+    this.itemCreateForm = this.formBuilder.group({
       title: ['', [Validators.required]],
       dueDate: ['', [Validators.required]],
-      //we are using FormArray because we want to dynamically generate form controls such as <input>
       categories: this.formBuilder.array([], [Validators.required]),
       reminderDate: ['', []],
-      taskImageSrc: ['', []],
+      itemImageSrc: ['', []],
       markAsDone: ['', []]
+    },
+    {
+      validator: validateDueDate('dueDate')
     });
   }
 
@@ -50,26 +52,24 @@ export class TodolistCreateComponent implements OnInit {
   }
 
   OnSubmit() {
-    console.log(this.taskCreateForm.value);
-    this.todolistService.AddTask(this.taskCreateForm.value);
+    console.log(this.itemCreateForm.value);
+    this.todolistService.AddItem(this.itemCreateForm.value);
     this.router.navigate(['/todolist']);
   }
 
   OnAddReminder() {
     this.reminderFieldIsVisible = !this.reminderFieldIsVisible;
-    this.taskCreateForm.get('reminderDate').reset();
+    this.itemCreateForm.get('reminderDate').reset();
   }
 
   
   OnCheckboxChange(e:any,categories:string) {
-    const ArrayOfCheckedCategories = <FormArray>this.taskCreateForm.get(categories);
+    const ArrayOfCheckedCategories = <FormArray>this.itemCreateForm.get(categories);
     if(e.target.checked)
     {
-      // Now to add a form control at run time we need to use push() method of FormArray
       ArrayOfCheckedCategories.push(new FormControl(e.target.value));
     }
     else{
-      // To remove a form control at run time we need to use removeAt() method of FormArray.
         let i=0;
         ArrayOfCheckedCategories.controls.forEach((item) =>{
         if(item.value==e.target.value)
@@ -91,8 +91,8 @@ export class TodolistCreateComponent implements OnInit {
 
       reader.onload = () => {
         this.ItemImageDisplay = reader.result as string;
-        this.taskCreateForm.patchValue({
-          taskImageSrc: reader.result
+        this.itemCreateForm.patchValue({
+          itemImageSrc: reader.result
         });
 
       };

@@ -79,7 +79,6 @@
                 <div class="col-xs col-md-6 col-md-offset-3">
                     <label>Profile Image</label>
                     <input type="file" id="profileImage" class="form-control" name="profileImage" (change)="onaddImage($event)">
-                    <!-- <img [src]="profileImage" class="img-responsive" *ngIf="profileImage !=''" style="height: 200px;"> -->
                 </div>
             </div>
 
@@ -90,7 +89,7 @@
                         <input type="password" id="password" class="form-control" formControlName="password" placeholder="Enter your password">
                         <div class="text-danger">
                             <div *ngIf="RegisterForm.get('password')?.hasError('required') && RegisterForm.get('password')?.touched">Password is required</div>
-                            <div *ngIf="RegisterForm.get('password')?.hasError('minlength')">Password must be at least 8 characters</div>
+                            <div *ngIf="RegisterForm.get('password')?.hasError('minlength') && RegisterForm.get('password')?.touched">Password must be at least 8 characters</div>
                         </div>
                     </div>
                 </div>
@@ -104,6 +103,9 @@
                         <div class="text-danger">
                             <div *ngIf="RegisterForm.get('confirmPassword')?.hasError('required') && RegisterForm.get('confirmPassword')?.touched">Confirm Password is required</div>
                         </div>
+                        <!-- <div *ngif="RegisterForm.get('confirmPassword')?.invalid">
+                            Passsword and Confirm Password didn't match.
+                        </div> -->
                     </div>
                 </div>
             </div>

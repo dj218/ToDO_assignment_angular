@@ -11,60 +11,54 @@ export class TodolistService {
 
   userEmail : string = '';
   todolist : Item[] = [];
-  tasksToDelete : string[] = [];
+  itemsToDelete : string[] = [];
   filters : Filter = new Filter(this.userService.activteUserEmail,[],'','',[],'');
-  tasksFilterApplied = new EventEmitter<Item[]>();
+  itemsFilterApplied = new EventEmitter<Item[]>();
 
   constructor(private userService : UserService) {
     this.GetDataOfTodolist();
-  }
-
-  
-  SaveDataToLocalStorage(){
-    localStorage.setItem('todolist',JSON.stringify(this.todolist));
   }
 
   GetDataOfTodolist(){
     this.todolist = JSON.parse(localStorage.getItem('todolist')) || [];
   }
 
-  GetTasks(){
+  GetItems(){
     let userEmail = this.filters.userEmail;
-    let taskTypeArray = this.filters.taskTypeArray;
+    let itemTypeArray = this.filters.itemTypeArray;
     let startDate = this.filters.startDate;
     let endDate = this.filters.endDate;
-    let taskCategoryArray = this.filters.taskCategoryArray;
+    let itemCategoryArray = this.filters.itemCategoryArray;
     let sortType = this.filters.sortType;
 
-    let filteredTasks : Item[] = this.todolist;
-    filteredTasks = this.UserIdFilter(filteredTasks , userEmail);
-    filteredTasks = this.TaskTypeFilter(filteredTasks , taskTypeArray);
-    filteredTasks = this.InBetweendueDateFilter(filteredTasks , startDate ,endDate);
-    filteredTasks = this.TaskCategoryFilter(filteredTasks,taskCategoryArray);
-    filteredTasks = this.SortFilter(filteredTasks , sortType);
+    let filteredItems : Item[] = this.todolist;
+    filteredItems = this.UserIdFilter(filteredItems , userEmail);
+    filteredItems = this.ItemTypeFilter(filteredItems , itemTypeArray);
+    filteredItems = this.InBetweendueDateFilter(filteredItems , startDate ,endDate);
+    filteredItems = this.ItemCategoryFilter(filteredItems,itemCategoryArray);
+    filteredItems = this.SortFilter(filteredItems , sortType);
 
-    this.tasksFilterApplied.emit(filteredTasks);
-    return filteredTasks;
+    this.itemsFilterApplied.emit(filteredItems);
+    return filteredItems;
   }
 
-  AddTask(item){
-    let newTask = new Item(
+  AddItem(item){
+    let newItem = new Item(
       UUID.UUID(),
       this.userService.activteUserEmail,
       item.title,
       item.dueDate,
       item.categories,
       item.reminderDate,
-      item.taskImageSrc,
+      item.itemImageSrc,
       item.markAsDone
     );
     this.todolist = this.todolist || [];
-    this.todolist.push(newTask);
-    this.GetTasks();
-    this.SaveDataToLocalStorage();
+    this.todolist.push(newItem);
+    localStorage.setItem('todolist',JSON.stringify(this.todolist));
   }
 
-  UpdateTask(itemID , item){
+  UpdateItem(itemID , item){
     let i=this.todolist.map(function(e) {return e.itemId; }).indexOf(itemID);
     this.todolist[i].title = item.title;
     this.todolist[i].dueDate = item.dueDate;
@@ -72,30 +66,27 @@ export class TodolistService {
     this.todolist[i].reminderDate = item.reminderDate;
     this.todolist[i].itemImageSrc = item.itemImageSrc;
     this.todolist[i].markAsDone = item.markAsDone;
-    this.GetTasks();
-    this.SaveDataToLocalStorage();
+    localStorage.setItem('todolist',JSON.stringify(this.todolist));
   }
 
-  DeleteTasks(){
-    this.todolist = this.todolist.filter((task)=>{
+  DeleteItems(){
+    this.todolist = this.todolist.filter((item)=>{
       let status = true;
-      for(let tITD of this.tasksToDelete){
-        if(tITD == task.itemId)
-          status = false;
+      if(this.itemsToDelete.includes(item.itemId))
+      {
+        status=false;
       }
       return status;
     })
-    this.tasksToDelete = [];
-    this.GetTasks();
-    this.SaveDataToLocalStorage();
+    this.itemsToDelete = [];
+    this.GetItems();
+    localStorage.setItem('todolist',JSON.stringify(this.todolist));
   }
 
-  GetTaskByTaskId(itemID){
+  GetItemByItemId(itemID){
     let i=this.todolist.map(function(e) {return e.itemId; }).indexOf(itemID);
     return this.todolist[i];
   }
-
-  
 
   UserIdFilter (todolist : Item[],userEmail : string){
     return todolist.filter((item)=>{
@@ -106,19 +97,16 @@ export class TodolistService {
     })
   }
 
-  TaskTypeFilter(todolist : Item[],taskTypeArray : string[]){
-    if(taskTypeArray.length == 0)
+  ItemTypeFilter(todolist : Item[],itemTypeArray : string[]){
+    if(itemTypeArray.length == 0)
       return todolist;
     else
       return todolist.filter((item)=>{
-        let status = false;
-        for (let taskTypeArrayEl of taskTypeArray){
-          if(taskTypeArrayEl == 'completedTasks')
-            status = status || (item.markAsDone == true)
-          else if(taskTypeArrayEl == 'dueTasks' && !item.markAsDone)
-            status = true
+        if((item.markAsDone==true && itemTypeArray.includes('completedItems')) || (item.markAsDone==false && itemTypeArray.includes('dueItems')))
+        {
+          return true;
         }
-        return status;
+        return false;
       })
   }
 
@@ -140,16 +128,16 @@ export class TodolistService {
     })
   }
 
-  TaskCategoryFilter(todolist : Item[], taskCategoryArray : string[]){
+  ItemCategoryFilter(todolist : Item[], itemCategoryArray : string[]){
 
-    if(taskCategoryArray.length == 0)
+    if(itemCategoryArray.length == 0)
       return todolist;
     else
       return todolist.filter((item)=>{
         let status = false;
-        for (let tcatA of taskCategoryArray){
-          status = status || item.categories.includes(tcatA);
-        }
+        itemCategoryArray.forEach((category)=>{
+            status= status || item.categories.includes(category);
+        });
         return status;
       })
   }
@@ -172,12 +160,12 @@ export class TodolistService {
     }
   }
 
-  CheckTaskToDelete(taskId : string){
-    this.tasksToDelete.push(taskId);
+  CheckItemToDelete(itemId : string){
+    this.itemsToDelete.push(itemId);
   }
 
-  UncheckTaskToDelete(ItemIdToUncheck : string){
-    this.tasksToDelete = this.tasksToDelete.filter((itemId)=>{
+  UncheckItemToDelete(ItemIdToUncheck : string){
+    this.itemsToDelete = this.itemsToDelete.filter((itemId)=>{
       if(itemId == ItemIdToUncheck)
         return false;
       else

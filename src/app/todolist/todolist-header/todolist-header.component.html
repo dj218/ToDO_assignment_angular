@@ -1,7 +1,7 @@
 <div class="container">
   <div class="app">
     <h1>To DO List</h1>
-    <form [formGroup]="taskFilterForm" (ngSubmit)="OnSubmit()">
+    <form [formGroup]="itemFilterForm" (ngSubmit)="OnSubmit()">
 
 
       <div class="row">
@@ -14,13 +14,13 @@
       
       <div class="row">
         <div class="form-group col-md-3 offset-md-1">
-          <label for="taskType">
-            Select task type
+          <label for="itemType">
+            Select Item type
           </label>
-          <div formArrayName="taskTypeArray">
-            <div *ngFor="let ttype of taskType; let i = index">
+          <div formArrayName="itemTypeArray">
+            <div *ngFor="let itype of itemType; let i = index">
               <input type="checkbox" [formControlName]="i" />
-              {{ttype.name}}
+              {{itype.name}}
             </div> 
           </div>
         </div>
@@ -35,7 +35,7 @@
           </div>
           <div class="row">
             <div class="form-group"
-              [class.has-error]="taskFilterForm.get('startDate')?.invalid && taskFilterForm.get('startDate')?.touched">
+              [class.has-error]="itemFilterForm.get('startDate')?.invalid && itemFilterForm.get('startDate')?.touched">
               <div class="col-xs-6">
                 <label class="control-label">
                   Start Date
@@ -49,18 +49,18 @@
                 <input type="date" class="form-control" formControlName="endDate">
               </div>
               <small class="help-block col-xs-12"
-                *ngIf="taskFilterForm.get('startDate')?.invalid && taskFilterForm.get('startDate')?.touched">Start date
+                *ngIf="itemFilterForm.get('startDate')?.invalid && itemFilterForm.get('startDate')?.touched">Start date
                 should be smaller than end date.</small>
             </div>
           </div>
         </div>
 
         <div class="form-group col-md-4">
-          <label for="taskCategory">
-            Select task category
+          <label for="itemCategory">
+            Select item category
           </label>
-          <div formArrayName="taskCategoryArray">
-            <div *ngFor="let tcat of taskCategory; let i = index">
+          <div formArrayName="itemCategoryArray">
+            <div *ngFor="let tcat of itemCategory; let i = index">
               <input type="checkbox" [formControlName]="i" />
               {{tcat.name}}
             </div>
@@ -72,18 +72,18 @@
           <label for="sort">
             Sort
           </label>
-          <select name="sort" id="sort" class="form-control" formControlName="sortTasks">
+          <select name="sort" id="sort" class="form-control" formControlName="sortItems">
             <option value="sortByNameAsc">Sort by name in Ascending order</option>
             <option value="sortByNameDesc">Sort by name in Descending order</option>
             <option value="sortByDateAsc">Sort by date in Ascending order</option>
             <option value="sortByDateDesc">Sort by date in Descending order</option>
           </select>
         </div>
-      <div class="row">
+      <div class="offset-md-9 col-md-3">
       <button class="btn btn-success" id="FilterID" type="submit">Apply Filters</button>
       <button class="btn btn-primary" id="ResetID" type="button" (click)="OnClickReset()">Reset</button>
       </div>
     </form>
   </div>
 </div>
-<button class="btn btn-primary" type="button" (click)="OnClickCreateTask()">Create Task</button> 
+

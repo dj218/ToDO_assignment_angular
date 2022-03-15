@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TodolistService } from 'src/app/services/todolist.service';
 import { Item } from 'src/app/models/item.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-todolist-item',
@@ -11,31 +12,32 @@ export class TodolistItemComponent implements OnInit {
 
  
   @Input() item : Item;
-  @Input() deleteMode : boolean = false;
+  @Input() deleteMode: boolean =false;
 
   subHeading : string;
 
-  constructor(private todolistService : TodolistService) { }
+  constructor(private router:Router, private todolistService : TodolistService) { }
 
   ngOnInit(): void {
-
     if(this.item.markAsDone)
       this.subHeading = '(Completed)'
-
   }
 
-  onChangeCheckbox(e : any){
-    // if checkbox is checked we have to add this item to the delete array
+  OnChangeCheckbox(e : any){
     if(e.target.checked)
-    this.todolistService.CheckTaskToDelete(this.item.itemId);
-    // else if checkbox is unchecked we have to remove this item from the delete array by filtering it
+    this.todolistService.CheckItemToDelete(this.item.itemId);
     else if(!e.target.checked)
-      this.todolistService.UncheckTaskToDelete(this.item.itemId);
+      this.todolistService.UncheckItemToDelete(this.item.itemId);
   }
 
-  markAsDone(){
+  MarkAsDone(){
     this.item.markAsDone = true;
     this.subHeading = '(Completed)';
-    this.todolistService.UpdateTask(this.item.itemId,this.item);
+    this.todolistService.UpdateItem(this.item.itemId,this.item);
+  }
+
+  EditItem()
+  {
+    this.router.navigate(['/todolist/edit'],{queryParams:{ItemID : this.item.itemId}});
   }
 }

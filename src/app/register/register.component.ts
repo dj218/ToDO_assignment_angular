@@ -56,17 +56,13 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    // stop here if form is invalid
     if (this.RegisterForm.invalid) {
       return;
     }
 
-    // from user service it will check if Email is unique or not if unique it will create a user(which will be of the form
-    // USER model) and will add this user in local storage and will navigate to the login page 
     if(this.userservice.EmailIsUnique(this.RegisterForm.value['email'])){
       this.emailAlredyExist="Email Already Exist";
     }
-    // else will set the variable email already exist to this message
     else{
       let user=this.RegisterForm.value;
       delete user.confirmPassword;

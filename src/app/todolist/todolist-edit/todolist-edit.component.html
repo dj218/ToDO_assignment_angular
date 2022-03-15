@@ -5,22 +5,22 @@
   
       <div class="row">
         <div class="col-xs-12">
-          <h2>Edit task</h2>
+          <h2>Edit item</h2>
         </div>
       </div>
       <div class="d-flex justify-content-between align-items-center mb-3">
-      <form [formGroup]="taskForm" (ngSubmit)="OnSubmit()">
+      <form [formGroup]="itemForm" (ngSubmit)="OnSubmit()">
   
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
-              <label for="title" class="control-label">Task name *</label>
+              <label for="title" class="control-label">Item title *</label>
               <input
                 type="text"
-                placeholder="Enter task name"
+                placeholder="Enter item name"
                 class="form-control"
                 formControlName="title">
-                <small class="help-block" *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched">Please enter a task name</small>
+                <small class="help-block" *ngIf="itemForm.get('title')?.invalid && itemForm.get('title')?.touched">Please enter a item name</small>
             </div>
           </div>
         </div>
@@ -33,7 +33,7 @@
                 type="date"
                 class="form-control"
                 formControlName="dueDate">
-                <small class="help-block" *ngIf="taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched">Please enter a due date of the task</small>
+                <small class="help-block" *ngIf="itemForm.get('dueDate')?.invalid && itemForm.get('dueDate')?.touched">Please enter a due date of the item</small>
             </div>
           </div>
         </div>
@@ -41,8 +41,8 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
-              <label for="taskType" class="control-label">Select task category *</label>
-              <div *ngFor="let tcat of taskCategory;let i=index">
+              <label for="itemType" class="control-label">Select item category *</label>
+              <div *ngFor="let tcat of itemCategory;let i=index">
                 <input
                 type="checkbox"
                 [value]="tcat.value"
@@ -51,7 +51,7 @@
                 />
                 {{tcat.name}}
               </div>
-              <small class="help-block" *ngIf="taskForm.get('categories')?.invalid">Please choose atleast 1 category.</small>
+              <small class="help-block" *ngIf="itemForm.get('categories')?.invalid">Please choose atleast 1 category.</small>
             </div>
           </div>
         </div>
@@ -70,7 +70,7 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
-              <label for="itemImage">Task Image</label>
+              <label for="itemImage">Item Image</label>
               <input
                 type="file"
                 id="itemImage"
@@ -94,7 +94,7 @@
   
         <div class="row">
           <div class="col-xs-12">
-            <button class="btn btn-success" type="submit" [disabled]="taskForm.invalid">Save</button> |
+            <button class="btn btn-success" type="submit" [disabled]="itemForm.invalid">Save</button> |
             <button class="btn btn-danger" type="button" (click)="OnCancel()">Cancel</button>
           </div>
         </div>

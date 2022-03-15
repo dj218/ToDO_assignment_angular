@@ -4,20 +4,20 @@
         <div class="p-3 py-5">
           <div class="row">
             <div class="col-xs-12">
-              <h2>Create a new task</h2>
+              <h2>Create a new Item</h2>
             </div>
           </div>
           
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <form [formGroup]="taskCreateForm" (ngSubmit)="OnSubmit()">
+      <form [formGroup]="itemCreateForm" (ngSubmit)="OnSubmit()">
 
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
-              <label for="title" class="control-label">Task name *</label>
-              <input type="text" placeholder="Enter task title" class="form-control" formControlName="title">
+              <label for="title" class="control-label">Item name *</label>
+              <input type="text" placeholder="Enter item title" class="form-control" formControlName="title">
               <small class="help-block"
-                *ngIf="taskCreateForm.get('title')?.invalid && taskCreateForm.get('title')?.touched">Please enter the Title</small>
+                *ngIf="itemCreateForm.get('title')?.invalid && itemCreateForm.get('title')?.touched">Please enter the Title</small>
             </div>
           </div>
         </div>
@@ -26,9 +26,9 @@
           <div class="col-xs-12">
             <div class="form-group">
               <label for="dueDate" class="control-label">Due date *</label>
-              <input type="date" class="form-control" formControlName="dueDate">
+              <input type="date" class="form-control"  formControlName="dueDate">
               <small class="help-block"
-                *ngIf="taskCreateForm.get('dueDate')?.invalid && taskCreateForm.get('dueDate')?.touched">Please enter a
+                *ngIf="itemCreateForm.get('dueDate')?.invalid && itemCreateForm.get('dueDate')?.touched">Please enter a
                 due date of the item</small>
             </div>
           </div>
@@ -37,12 +37,12 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
-              <label for="taskType" class="control-label">Select task category *</label>
+              <label for="itemType" class="control-label">Select item category *</label>
               <div *ngFor="let tcat of itemCategory;let i=index">
                 <input type="checkbox" [value]="tcat.value" [(ngModel)]="tcat.checked" (change)="OnCheckboxChange($event,'categories')" [ngModelOptions]="{standalone: true}"/>
                 {{tcat.name}}
               </div>
-              <small class="help-block" *ngIf="taskCreateForm.get('categories')?.invalid">Please choose atleast 1
+              <small class="help-block" *ngIf="itemCreateForm.get('categories')?.invalid">Please choose atleast 1
                 category.</small>
             </div>
           </div>
@@ -60,7 +60,7 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="form-group">
-              <label for="itemImage">Task Image</label>
+              <label for="itemImage">Item Image</label>
               <input type="file" id="itemImage" name="itemImage" class="form-control" (change)="OnImageChange($event)">
               <img [src]="ItemImageDisplay" class="img-responsive" *ngIf="ItemImageDisplay != ''"
                 style="height: 200px;">
@@ -78,7 +78,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <button class="btn btn-success" type="submit" [disabled]="taskCreateForm.invalid">Create</button> |
+            <button class="btn btn-success" type="submit" [disabled]="itemCreateForm.invalid">Create</button> |
             <button class="btn btn-danger" type="button" (click)="OnCancel()">Cancel</button>
           </div>
         </div>
