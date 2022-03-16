@@ -10,6 +10,7 @@ import { UserService } from './user.service';
 export class TodolistService {
 
   userEmail : string = '';
+  show : boolean = false;
   todolist : Item[] = [];
   itemsToDelete : string[] = [];
   filters : Filter = new Filter(this.userService.activteUserEmail,[],'','',[],'');

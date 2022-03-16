@@ -3,7 +3,7 @@ import { TodolistService } from '../services/todolist.service';
 import { UserService } from '../services/user.service';
 import { Item } from '../models/item.model';
 import { Filter } from '../models/filter.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-todolist',
@@ -18,7 +18,7 @@ export class TodolistComponent implements OnInit {
   filters : Filter ;
   heading : string ;
 
-  constructor(private router: Router,private todolistService : TodolistService,private userService : UserService) {
+  constructor(private route: ActivatedRoute,private router: Router,private todolistService : TodolistService,private userService : UserService) {
    }
 
   ngOnInit(): void {
@@ -51,7 +51,8 @@ export class TodolistComponent implements OnInit {
   }
 
   OnClickCreateItem(){
-    this.router.navigate(['/todolist/create'])
+    //this.router.navigate(['create'], {relativeTo:this.route})
+    this.router.navigate(['/todolist/create']);
   }
 
   SelectItemsToDeleteButtonClicked(){

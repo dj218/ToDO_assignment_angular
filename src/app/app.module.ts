@@ -3,11 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ProfileComponent } from './profile/profile.component';
-import { HeaderComponent } from './header/header.component';
+import { ProfileComponent } from '../modules/profile/profile.component';
+import { HeaderComponent } from '../modules/header/header.component';
 import { TodolistComponent } from './todolist/todolist.component';
-import { RegisterComponent } from './register/register.component';
-import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from '../modules/register/register.component';
+import { LoginComponent } from '../modules/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TodolistEditComponent } from './todolist/todolist-edit/todolist-edit.component';

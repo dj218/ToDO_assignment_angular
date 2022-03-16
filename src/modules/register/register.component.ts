@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { mustMatch } from '../helpers/CustomValidators';
-import { User } from '../models/user.model';
-import { UserService } from '../services/user.service';
+import { mustMatch } from '../../app/helpers/CustomValidators';
+import { User } from '../../app/models/user.model';
+import { UserService } from '../../app/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
       gender: ['', [Validators.required]],
       address: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12),mustMatch]],
       profileImageSrc : ['',[]]
     },
     {

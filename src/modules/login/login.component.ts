@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../services/user.service';
-import { User } from '../models/user.model';
+import { UserService } from '../../app/services/user.service';
+import { User } from '../../app/models/user.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -11,14 +12,11 @@ import { User } from '../models/user.model';
 })
 export class LoginComponent implements OnInit {
 
+  Email:string;
+  Password:string;
   wrongInput = false;
-  LoginForm: FormGroup;
 
   constructor(private router: Router, private formbuilder: FormBuilder, private userservice: UserService) {
-    this.LoginForm = this.formbuilder.group({
-      'email': ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"), Validators.email]],
-      'password': ['', [Validators.required, Validators.minLength(8)]]
-    })
   }
 
 
@@ -31,12 +29,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    // stop here if form is invalid
-    if (this.LoginForm.invalid)
-      return;
-
-    // from user service it will check if user exists in the local storage or not and will navigate to the login page 
-    if (this.userservice.UserExists(this.LoginForm.value['email'], this.LoginForm.value['password'])) {
+    if (this.userservice.UserExists(this.Email, this.Password)) {
       this.wrongInput = false;
       this.router.navigate(['/profile'],{queryParams:{'userEmail':this.userservice.activteUserEmail}});
     }

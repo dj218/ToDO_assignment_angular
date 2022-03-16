@@ -1,4 +1,5 @@
 import {
+  AbstractControl,
   FormControl,
   FormGroup
 } from '@angular/forms';
@@ -23,21 +24,34 @@ export function mustMatch(controlName: string, matchingControlName: string) {
   };
 }
 
+export function LessThanToday(control: AbstractControl) {
+  const currentDateTime: Date = new Date();
 
-export function validateDueDate(controlName: string)
-{ 
-
-    const currentDateTime = new Date();
-    currentDateTime.setHours(0,0,0,0);
-
-    const controlValue = new Date(controlName);
-    controlValue.setHours(0,0,0,0);
-
-    console.log(currentDateTime+'-'+controlValue)
-
-    if(currentDateTime<controlValue)
-    {
-        return {response: true};
-    }
+  if(new Date(control.value) < currentDateTime)
+  {
+    return {"LessThanToday" : true}
+  }
+  else{
     return null;
+  }
+}
+
+export function GreaterThanDueDate(controlName: string, matchingControlName: string) {
+  return (formGroup: FormGroup) => {
+    const control = formGroup.controls[controlName];
+    const matchingControl = formGroup.controls[matchingControlName];
+
+    if (control.errors && !control.errors['GreaterThanDueDate']) {
+      return;
+    }
+
+    // set error on matchingControl if validation fails
+    if (new Date(control.value) > new Date(matchingControl.value)) {
+      control.setErrors({
+        GreaterThanDueDate: true
+      });
+    } else {
+      control.setErrors(null);
+    }
+  };
 }

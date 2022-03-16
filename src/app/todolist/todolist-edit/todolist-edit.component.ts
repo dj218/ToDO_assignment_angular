@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { validateDueDate } from 'src/app/helpers/CustomValidators';
+import { GreaterThanDueDate, LessThanToday } from 'src/app/helpers/CustomValidators';
 import { Item } from 'src/app/models/item.model';
 import { TodolistService } from 'src/app/services/todolist.service';
 
@@ -41,14 +41,14 @@ export class TodolistEditComponent implements OnInit {
 
     this.itemForm = this.formBuilder.group({
       title : [this.item.title,[Validators.required]],
-      dueDate : [this.item.dueDate,[Validators.required]],
+      dueDate : [this.item.dueDate,[Validators.required,LessThanToday]],
       categories: this.formBuilder.array([], [Validators.required]),
-      reminderDate : [this.item.reminderDate,[]],
+      reminderDate : [this.item.reminderDate,[LessThanToday]],
       itemImageSrc : [this.item.itemImageSrc,[]],
       markAsDone : [this.item.markAsDone,[]]
     },
     {
-      validator: validateDueDate('dueDate')
+      validator : GreaterThanDueDate('reminderDate','dueDate')
     });
 
       if(this.itemForm.controls['reminderDate'].value != null)

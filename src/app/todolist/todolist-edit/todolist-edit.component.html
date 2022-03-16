@@ -33,8 +33,12 @@
                 type="date"
                 class="form-control"
                 formControlName="dueDate">
-                <small class="help-block" *ngIf="itemForm.get('dueDate')?.invalid && itemForm.get('dueDate')?.touched">Please enter a due date of the item</small>
+                <div *ngIf="itemForm.get('dueDate')?.hasError('required') && itemForm.get('dueDate')?.touched">Please enter a due date of the item</div>
+                <div *ngIf="itemForm.get('dueDate')?.hasError('LessThanToday') && itemForm.get('dueDate')?.touched">
+                  Date can't be less than today
+              </div>
             </div>
+
           </div>
         </div>
   
@@ -65,6 +69,12 @@
               *ngIf="reminderFieldIsVisible"
               formControlName="reminderDate">
           </div>
+          <div *ngIf="itemForm.get('reminderDate')?.hasError('GreaterThanDueDate') && itemForm.get('reminderDate')?.touched">
+            Reminder Date can't be greater than the due date
+        </div>
+        <div *ngIf="itemForm.get('reminderDate')?.hasError('LessThanToday') && itemForm.get('reminderDate')?.touched">
+          Reminder Date can't be less than today
+      </div>
         </div><br>
   
         <div class="row">

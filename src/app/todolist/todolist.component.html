@@ -15,6 +15,7 @@
         </div>
         <div class="col-md-3">
           <button class="btn btn-primary" type="button" (click)="OnClickCreateItem()">Create a new Item</button>
+          <!-- <a routerLink="/todolist/create">Create a new Item</a> -->
         </div>
       </div>
     </div>
@@ -31,4 +32,8 @@
 
     <p *ngIf="todolist.length == 0" style="text-align: center;">No Items available</p>
   </div>
+  
 </div>
+<!-- <div>
+  <router-outlet></router-outlet>
+</div> -->

@@ -27,9 +27,12 @@
             <div class="form-group">
               <label for="dueDate" class="control-label">Due date *</label>
               <input type="date" class="form-control"  formControlName="dueDate">
-              <small class="help-block"
-                *ngIf="itemCreateForm.get('dueDate')?.invalid && itemCreateForm.get('dueDate')?.touched">Please enter a
-                due date of the item</small>
+              <div
+                *ngIf="itemCreateForm.get('dueDate')?.hasError('required') && itemCreateForm.get('dueDate')?.touched">Please enter a
+                due date of the item</div>
+            </div>
+            <div *ngIf="itemCreateForm.get('dueDate')?.hasError('LessThanToday') && itemCreateForm.get('dueDate')?.touched">
+                Date can't be less than today
             </div>
           </div>
         </div>
@@ -55,6 +58,12 @@
             reminder
             <input type="date" class="form-control" *ngIf="reminderFieldIsVisible" formControlName="reminderDate">
           </div>
+          <div *ngIf="itemCreateForm.get('reminderDate')?.hasError('GreaterThanDueDate') && itemCreateForm.get('reminderDate')?.touched">
+            Reminder Date can't be greater than the due date
+        </div>
+        <div *ngIf="itemCreateForm.get('reminderDate')?.hasError('LessThanToday') && itemCreateForm.get('reminderDate')?.touched">
+          Reminder Date can't be less than today
+      </div>
         </div><br>
 
         <div class="row">

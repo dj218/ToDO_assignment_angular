@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Router } from '@angular/router';
 import { TodolistService } from 'src/app/services/todolist.service';
 import { Item } from 'src/app/models/item.model';
-import { validateDueDate } from 'src/app/helpers/CustomValidators';
+import { GreaterThanDueDate, LessThanToday } from 'src/app/helpers/CustomValidators';
 
 
 @Component({
@@ -33,14 +33,14 @@ export class TodolistCreateComponent implements OnInit {
 
     this.itemCreateForm = this.formBuilder.group({
       title: ['', [Validators.required]],
-      dueDate: ['', [Validators.required]],
+      dueDate: ['', [Validators.required,LessThanToday]],
       categories: this.formBuilder.array([], [Validators.required]),
-      reminderDate: ['', []],
+      reminderDate: ['', [LessThanToday]],
       itemImageSrc: ['', []],
       markAsDone: ['', []]
     },
     {
-      validator: validateDueDate('dueDate')
+      validator : GreaterThanDueDate('reminderDate','dueDate')
     });
   }
 
@@ -52,7 +52,6 @@ export class TodolistCreateComponent implements OnInit {
   }
 
   OnSubmit() {
-    console.log(this.itemCreateForm.value);
     this.todolistService.AddItem(this.itemCreateForm.value);
     this.router.navigate(['/todolist']);
   }
@@ -62,7 +61,6 @@ export class TodolistCreateComponent implements OnInit {
     this.itemCreateForm.get('reminderDate').reset();
   }
 
-  
   OnCheckboxChange(e:any,categories:string) {
     const ArrayOfCheckedCategories = <FormArray>this.itemCreateForm.get(categories);
     if(e.target.checked)
@@ -98,7 +96,4 @@ export class TodolistCreateComponent implements OnInit {
       };
     }
   }
-
-
-
 }

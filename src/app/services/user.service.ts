@@ -9,6 +9,7 @@ export class UserService implements OnInit{
   constructor() {
     this.GetDataFromLocalStorage() 
    }
+
   ngOnInit(): void { 
     
   }
@@ -32,18 +33,22 @@ export class UserService implements OnInit{
   AddUser(user: User) {
     this.userarray.push(user);
     localStorage.setItem('usersarray', JSON.stringify(this.userarray));
-    this.activteUserEmail = user.email;
     this.AuthenticationStatusChanged.emit(user.email);
   }
 
+  getIndex(email:string)
+  {
+    let i=this.userarray.findIndex((user)=>user.email==email);
+    return i;
+  }
+  
   GetUser(email:string):User
   {
-    let i=this.userarray.map(function(e) {return e.email; }).indexOf(email);
-    return this.userarray[i];
+    return this.userarray.find((user) => user.email == email);
   }
   
   EditUser(userEmail: string,user: any) {
-    let i=this.userarray.map(function(e) {return e.email; }).indexOf(userEmail);
+    let i=this.getIndex(userEmail);
     this.userarray[i].firstName = user.firstName;
     this.userarray[i].lastName = user.lastName;
     this.userarray[i].gender = user.gender;
@@ -53,13 +58,13 @@ export class UserService implements OnInit{
   }
 
   EmailIsUnique(email: string) 
-  {
-    return this.userarray.map(function(e) {return e.email;}).includes(email);
+  { 
+    return this.userarray.some((user) => user.email == email);
   }
 
   UserExists(email: string, password: string)
   {
-    let i=this.userarray.map(function(e) {return e.email; }).indexOf(email);
+    let i=this.getIndex(email);
     if(this.userarray[i].email===email && this.userarray[i].password==password)
     {
       this.activteUserEmail = email;
